@@ -1,7 +1,7 @@
 # 第2章 python起步
 ### 列表解析
 
-```
+```python
 [x**2 for x in range(10)]
 ```
 # 第3章 python基础
@@ -155,7 +155,7 @@
 
 > 字典是python中唯一的映射类型
 
-### 映像和集合类型
+### 字典
 
 - 哈希表是一种数据结构: 键值对.哈希表一般有很好的性能, 因为用键查询相当快.
 
@@ -163,7 +163,7 @@
 
 - 遍历字典:
 
-  ```
+  ```python
   dict = {'name': 'earth', 'port': 80}
       for key in dict.keys():
           print 'key=%s, value=%s' % (key, dict[key])
@@ -178,4 +178,111 @@
 - 删除字典
 
   ```del dict2['name']```
+
+### 映射类型操作符
+
+- 用in 和 not in 操作符来检查某个键是否存在于字典中
+- dict.copy()拷贝一个字典
+- len()会返回字典的键值对数
+- dict([container])创建字典的工厂函数. 如果提供了容器类,就用其中的条目填充字典.
+
+### 映射类型内建方法
+
+- dict.setdefault('port'. 8080)检查字典中是否含有某键,如果这个键存在,你可以取到它的值,如果不存在,可以给这个键赋默认值并返回次值.
+- {}.fromkeys()用来初始化字典
+
+### 字典的键必须是可哈希的
+
+- 如果用元组作为字典的键,必须要加以限制,元组中职能包括像数字和字符串这样的不可变参数才可以作为字典中有效的键.
+
+### 集合类型
+
+- 子集/超集
+
+  ```set('shop') < set('cheeseshop')```
+
+  ```set('bookshop') >= set('shop')```
+
+
+### 集合类型操作符
+
+- 联合(|) 两个集合的联合是一个新集合
+- 交集(&) : 该集合中的每个元素同时是两个集合中的成员
+- 相对补集(-): 只属于集合X, 不属于集合Y
+- 对称差分(^): 只能属于集合s或者集合t的成员,不能同时属于两个集合
+- set([obj]): 可变集合工厂函数. obj必须是支持迭代的,由 obj中的元素创建集合,否则是空集合
+- frozenset([obj]): 不可变集合工厂函数. 执行方式和set()方法相同
+
+# 第8章 条件和循环
+
+### 与序列相关的内建函数
+
+> sorted(), reversed(), enumerate(), zip()
+
+- sorted(): 给序列排序
+- print list(reversed([123, 214, 212, 111])): 反转数组
+- enumerate 函数用于遍历序列中的元素以及它们的下标: for i,j in enumerate(('a','b','c'))
+- zip函数接受任意多个（包括0个和1个）序列作为参数，返回一个tuple列表
+
+### continue语句
+
+- 当遇到continue语句时,程序会终止当前循环,并且忽略剩余的语句,然后回到循环的顶端.
+
+### pass语句
+
+- pass语句表示不做任何事情
+
+### 迭代器和iter()函数
+
+```python
+myTuple = (123, 'xyz', 45.67)
+i = iter(myTuple)
+i.next()
+```
+
+- 字典
+
+```python
+for eachKey in myDict:
+```
+
+- 文件
+
+```python
+for eachLine in myFile
+```
+
+- 如何创建迭代器? 
+- - 对一个对象调用iter()就可以得到它的迭代器
+  - 如果你传递一个参数给iter(), 它会检查你传递的是不是一个序列, 如果是, 根据索引从0一直迭代到序列结束.
+
+### 列表解析
+
+- [(x ** 2) for x in range(6) if x > 1]
+
+
+- 矩阵样例 [(x+1,y+1) for x in range(3) for y in range(5)]
+- 磁盘文件样例: f = open('hhga.txt', 'r')    len([word for line in f for word in line.split()])
+
+### 生成器表达式
+
+- ```python
+  sum(len(word) for line in data for word in line.split())
+  ```
+
+
+- 寻找文件最长的行(因为文件本身就成为了它自己的迭代器,不需要调用readlines())
+
+```python
+f = open('/etc/motd', 'r')
+allLineLens = [len(x.strip()) for x in f]
+f.close()
+print max(allLineLens)
+```
+
+> 简化为
+
+```python
+max(len(x.strip()) for x in open('/etc/motd'))	
+```
 
