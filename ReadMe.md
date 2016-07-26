@@ -286,3 +286,74 @@ print max(allLineLens)
 max(len(x.strip()) for x in open('/etc/motd'))	
 ```
 
+# 第9章 文件和文件输出
+
+### 文件内建函数
+
+```python
+fp = open('/etc/motd')# 以读方式打开 fp = open('test', 'w')# 以写方式打开
+fp = open('test', 'w')# 以写方式打开
+fp = open('data', 'r+') # 以读写方式打开
+fp = open(r'c:\io.sys', 'rb') # 以二进制读模式打开
+```
+
+- 所有的open()方法都可以用file()来替代
+
+### OS模块访问函数
+
+| 函数                       | 描述                   |
+| ------------------------ | -------------------- |
+| remove()/unlink()        | 删除文件                 |
+| rename()                 | 重命名文件                |
+| chdir()                  | 改变当前工作目录             |
+| listdir()                | 列出指定目录的文件            |
+| rmdir()/removedirs()     | 删除目录/删除多层目录          |
+| mkdir()/makedirs()       | 创建目录/创建多层目录          |
+| getcwd()                 | 获得当前位置               |
+| os.path.expanduser('~/') | 返回当前路径的绝对路径(**跨平台**) |
+
+# 第10章 错误和异常
+
+### 检测和处理异常
+
+- try 语句有两种主要形式: try-except 和 try-finally 
+- 我们可以在一个except子句里处理多个异常. except语句在处理多个异常时要求异常被放在一个tuple里.
+- try -finally 无论如何都执行
+
+### 上下文管理
+
+- with语句: 仅能工作于支持上下文管理协议的对象(file.....)
+
+# 第11章 函数和函数式编程
+
+### 返回值
+
+- 返回值可以是一个值或对象,也可以是list或者tuple
+
+### 默认参数
+
+- 默认参数让程序的健壮性上升到极高的级别,因为它们补充了标准位置参数没有提供的一些灵活性,这种简洁极大帮助了程序员.
+- def net_conn(host, port=80, style='tcp')
+
+### 函数式编程
+
+- lambda表达式: true =  lambda: True
+
+- def add(x, y): return x + y  ? lambda x, y: x + y
+
+- ```python
+  a = lambda x, y=2: x + y
+  ```
+
+
+- apply()  filter()  map()  reduce()  ?
+
+# 第12章 模块
+
+### 模块和文件
+
+- 模块被保存在sys.path里面,这是一个列表,我们可以对它进行修改: sys.path.append('/home/andy/py/lib')
+
+### 名称空间
+
+- __builtins__ 和 _builtin__    : buildins模块包含内建名称空间中内建名字的集合,其中大多数来自__buildin__模块,该模块包含内建函数,异常以及其他属性. 
