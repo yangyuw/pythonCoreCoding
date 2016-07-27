@@ -357,3 +357,113 @@ fp = open(r'c:\io.sys', 'rb') # 以二进制读模式打开
 ### 名称空间
 
 - __builtins__ 和 _builtin__    : buildins模块包含内建名称空间中内建名字的集合,其中大多数来自__buildin__模块,该模块包含内建函数,异常以及其他属性. 
+- 名称空间可以理解为一个容器,这个容器中可以装许多标识符,不同容器中同名的标识符不会冲突.
+
+### 导入模块
+
+- from module import name: 导入指定的模块属性
+- import Tkinter as tk: 使用自己想要的名字替换模块的原始名称
+
+### 包
+
+- 包是一个有层次的文件目录结构,它定义了一个由模块和子包组成的python应用程序执行环境.
+- 我们可以这样导入子包: import Phone.Mobile.Analog
+- 可以使用from-import实现不同需求的导入. from Phone import Mobile
+- from package.module import *
+
+# 第13章 面向对象编程
+
+### 介绍
+
+- **用类名作名称空间容器**: 
+
+- ```python
+  class MyData(object):
+      pass
+  mathObj = MyData()
+  mathObj.x = 4
+  mathObj.y = 5
+  mathObj.x + mathObj.y
+  ```
+
+  ```python
+  class AddrBookEntry(object): # 类定义 'address book entry class'
+  def __init__(self, nm, ph): # 定义构造器 
+      self.name = nm # 设置 name
+      self.phone = ph # 设置 phone
+      print 'Created instance for:', self.name
+  def updatePhone(self, newph): # 定义方法 
+      self.phone = newph
+      print 'Updated phone# for:', self.name
+  ```
+
+
+- 子类: 继承了父类的属性,每个子类最好定义它自己的构造器,不然父类的构造器会被调用.
+
+### 类
+
+- 创建类:
+
+- ```python
+  class ClassName(bases):
+      'class documentation string' #'类文档字符串'
+      class_suite #类体
+  ```
+
+- 使用类的方法的时候一定要初始化类 mc = myClass()    mc.myNoActionMethod()
+
+### 类属性
+
+- 特殊类属性
+
+- | 属性名称           | 作用        |
+  | -------------- | --------- |
+  | `C.__name__`   | 类C的名字     |
+  | `C.__doc__`    | 文档字符串     |
+  | `C.__bases__` | 所有父类构成的元组 |
+  | `C.__dict__`   | 属性        |
+  | `C.__module__` | 所在的模块     |
+  | `C.__class__`  | 对应的类      |
+
+### 子类
+
+- 创建一个子类
+
+- ```python
+  class Parent(object): # define parent class 定义父类
+       def parentMethod(self):
+           print 'calling parent method'
+  class Child(Parent): # define child class 定义子类 def childMethod(self):
+  print 'calling child method'
+  >>> p = Parent() # instance of parent 父类的实例 
+  >>> p.parentMethod()
+  calling parent method
+  >>> c = Child()# instance of child 子类的实例 
+  >>> c.childMethod() # child calls its method calling child method
+  >>> c.parentMethod() # calls parent's method calling parent method
+  ```
+
+- `__init__`: 当从一个构造器的`__init__`的类派生,如果你不去覆盖`__init__`,它将会被继承并自动调用.但如果你在子类中覆盖了`__init__`,子类被实例化时,父类的`__init__`就不会被自动调用. 如果想调用父类的`__init__`, 就需要明确指出父类. (`P.__init__(self)`)
+
+### 内建函数
+
+- isinstance(): 判断一个对象是否是另一个给定类的实例
+- super(): 用来查找父类的属性 ` super(MyClass,self).__init__()`
+
+
+- var() 返回一个包含对象存储于其`__dict__`中的属性及值.
+
+- ```python
+  class C(object):
+      pass
+  >>> c = C()
+  >>> c.foo = 100
+  >>> c.bar = 'Python'
+  >>> c.__dict__
+  {'foo': 100, 'bar': 'Python'}
+  >>> vars(c)
+  {'foo': 100, 'bar': 'Python'}
+  ```
+
+# 第14章 执行环境
+
