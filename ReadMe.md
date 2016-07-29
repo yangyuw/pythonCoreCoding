@@ -553,7 +553,207 @@ fp = open(r'c:\io.sys', 'rb') # 以二进制读模式打开
 
 # 第18章 多线程编程	
 
+### threading
+
+- `threading`是高级模块，对`_thread`进行了封装,不用thread模块的原因是它不支持守护进程, 当主线程退出时, 所有的子线程不论它们是否还在工作, 都会被强行退出.
+
+- ```python
+  import time, threading
+
+  def loop():
+      print('thread %s is running...' % threading.current_thread().name)
+      n = 0
+      while n < 5:
+          n = n + 1
+          print('thread %s >>> %s' % (threading.current_thread().name, n))
+          time.sleep(1)
+      print ('thread %s ended.' % threading.current_thread().name)
+
+  print ('thread %s is running...' % threading.current_thread().name)
+  t = threading.Thread(target=loop, name='LoopThread.')
+  t.start()
+  t.join()
+  print ('thread %s ended.' % threading.current_thread().name)
+  ```
+
+### Lock
+
+- 多线程和多进程最大的不同在于，多进程中，同一个变量，各自有一份拷贝存在于每个进程中，互不影响，而多线程中，所有变量都由所有线程共享，所以，任何一个变量都可以被任何一个线程修改，因此，线程之间共享数据最大的危险在于多个线程同时改一个变量，把内容给改乱了。
+
+- ```python
+  import time, threading
+
+  balance = 0
+  lock = threading.Lock()
+
+  def change_it(n):
+      global balance
+      balance = balance + n
+      balance = balance - n
+
+  def run_thread(n):
+      for i in range(100000):
+          lock.acquire()
+          try:
+              change_it(n)
+          finally:
+              lock.release()
+  t1 = threading.Thread(target=run_thread, args=(5,))
+  t2 = threading.Thread(target=run_thread, args=(8,))
+  t1.start()
+  t2.start()
+  t1.join()
+  t2.join()
+  print(balance)
+  ```
+
+### 多核CPU
+
+- Python解释器由于设计时有GIL全局锁，导致了多线程无法利用多核。多线程的并发在Python中就是一个美丽的梦。
+
+### multiprocessing
+
+- `multiprocessing`模块就是跨平台版本的多进程模块。
+
+```python
+from multiprocessing import Process
+import os
+
+def run_proc(name):
+    print('Run child process %s (%s)...' % (name, os.getpid()))
+
+if __name__=='__main__':
+    print('Parent process %s.' % os.getpid())
+    p = Process(target=run_proc, args=('test',))
+    print('Child process will start.')
+    p.start()
+    p.join()
+    print('Child process end.')
+```
+
+### Pool
+
+- 如果要启动大量的子进程，可以用进程池的方式批量创建子进程：
+
+```python
+from multiprocessing import Pool
+import os, time, random
+
+def long_time_task(name):
+    print('Run task %s (%s)...' % (name, os.getpid()))#第二个占位符要用括号包起来
+    start = time.time()
+    time.sleep(random.random() * 3)
+    end = time.time()
+    print('Task %s runs %0.2f seconds.' % (name, (end - start)))#小数点后两位
+
+if __name__=='__main__':
+    print('Parent process %s.' % os.getpid())
+    p = Pool(4)
+    for i in range(5):
+        p.apply_async(long_time_task, args=(i,))
+    print('Waiting for all subprocesses done...')
+    p.close()
+    p.join() #等待所有子进程执行完毕,调用join()之前必须要调用close()
+    print('All subprocesses done.')
+```
+
+### 子进程
+
+- 很多时候，子进程并不是自身，而是一个外部进程。我们创建了子进程后，还需要控制子进程的输入和输出。subprocess模块可以让我们非常方便地启动一个子进程，然后控制其输入和输出。
+
+- 如果子进程还需要输入，则可以通过`communicate()`方法输入：
+
+- ```python
+  import subprocess
+
+  print('$ nslookup')
+  r = subprocess.call(['nslookup', 'www.python.org'])
+  print('Exit code:', r)
+  ```
+
+  ```python
+  import subprocess
+
+  print('$ nslookup')
+  p = subprocess.Popen(['nslookup'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  output, err = p.communicate(b'set q=mx\npython.org\nexit\n')
+  print(output.decode('utf-8'))
+  print('Exit code:', p.returncode)
+  ```
 
 
+- 上面的代码相当于在命令行执行命令`nslookup`，然后手动输入：
 
+  ```
+  set q=mx
+  python.org
+  exit
+  ```
+
+### 进程间通信
+
+- 我们以`Queue`为例，在父进程中创建两个子进程，一个往`Queue`里写数据，一个从`Queue`里读数据
+
+- ```python
+  from multiprocessing import Process, Queue
+  import os, time, random
+
+  def write(q):
+      print('process to write: %s' % os.getpid())
+      for value in ['A', 'B', 'C']:
+          print ('Put %s to queue...' % value)
+          q.put(value)
+          time.sleep(random.random() *3)
+
+  def read(q):
+      print ('Process to read: %s' % os.getpid())
+      while True:
+          value = q.get(True)
+          print('Get %s from queue.' % value)
+
+  if __name__=='__main__':
+      q = Queue()
+      pw = Process(target=write, args=(q,))
+      pr = Process(target=read, args=(q,))
+      pw.start()
+      pr.start()
+      pw.join()
+      pr.terminate()
+  ```
+
+### ThreadLocal
+
+- 在多线程环境下，每个线程都有自己的数据。一个线程使用自己的局部变量比使用全局变量好，因为局部变量只有线程自己能看见，不会影响其他线程，而全局变量的修改必须加锁。但是局部变量也有问题，就是在函数调用的时候，传递起来很麻烦.`ThreadLocal`应运而生，不用查找`dict`，`ThreadLocal`帮你自动做这件事：
+
+- 全局变量`local_school`就是一个`ThreadLocal`对象，每个`Thread`对它都可以读写`student`属性，但互不影响。你可以把`local_school`看成全局变量，但每个属性如`local_school.student`都是线程的局部变量，可以任意读写而互不干扰，也不用管理锁的问题，`ThreadLocal`内部会处理。
+
+  可以理解为全局变量`local_school`是一个`dict`，不但可以用`local_school.student`，还可以绑定其他变量，如`local_school.teacher`等等。
+
+  `ThreadLocal`最常用的地方就是为每个线程绑定一个数据库连接，HTTP请求，用户身份信息等，这样一个线程的所有调用到的处理函数都可以非常方便地访问这些资源。
+
+```python
+import threading
+
+# 创建全局ThreadLocal对象:
+local_school = threading.local()
+
+def process_student():
+    # 获取当前线程关联的student:
+    std = local_school.student
+    print('Hello, %s (in %s)' % (std, threading.current_thread().name))
+
+def process_thread(name):
+    # 绑定ThreadLocal的student:
+    local_school.student = name
+    process_student()
+
+t1 = threading.Thread(target= process_thread, args=('Alice',), name='Thread-A')
+t2 = threading.Thread(target= process_thread, args=('Bob',), name='Thread-B')
+t1.start()
+t2.start()
+t1.join()
+t2.join()
+```
+
+# 第21章 数据库编程
 
