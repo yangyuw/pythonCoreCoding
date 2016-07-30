@@ -15,7 +15,7 @@
 - ls = os.linesep(换行符)为属性取别名可以缩短变量名和改善访问该变量的性能.  
 # 第4章 python对象  
 
-- python使用对象模型来存储数据.构造任何类型的值都是一个对象 
+- python使用对象模型来存储数据.构造任何类型的值都是一个对象
 - 所有的python对象都有三个特性:身份,类型和值
 - is 用来比较两个变量是否指向同一个对象
 - python仅缓存简单整数(-255到256)
@@ -270,7 +270,7 @@ for eachKey in myDict:
 for eachLine in myFile
 ```
 
-- 如何创建迭代器? 
+- 如何创建迭代器?
 - - 对一个对象调用iter()就可以得到它的迭代器
   - 如果你传递一个参数给iter(), 它会检查你传递的是不是一个序列, 如果是, 根据索引从0一直迭代到序列结束.
 
@@ -301,7 +301,7 @@ print max(allLineLens)
 > 简化为
 
 ```python
-max(len(x.strip()) for x in open('/etc/motd'))	
+max(len(x.strip()) for x in open('/etc/motd'))
 ```
 
 # 第9章 文件和文件输出
@@ -334,7 +334,7 @@ fp = open(r'c:\io.sys', 'rb') # 以二进制读模式打开
 
 ### 检测和处理异常
 
-- try 语句有两种主要形式: try-except 和 try-finally 
+- try 语句有两种主要形式: try-except 和 try-finally
 - 我们可以在一个except子句里处理多个异常. except语句在处理多个异常时要求异常被放在一个tuple里.
 - try -finally 无论如何都执行
 
@@ -374,7 +374,7 @@ fp = open(r'c:\io.sys', 'rb') # 以二进制读模式打开
 
 ### 名称空间
 
-- __builtins__ 和 _builtin__    : buildins模块包含内建名称空间中内建名字的集合,其中大多数来自__buildin__模块,该模块包含内建函数,异常以及其他属性. 
+- __builtins__ 和 _builtin__    : buildins模块包含内建名称空间中内建名字的集合,其中大多数来自__buildin__模块,该模块包含内建函数,异常以及其他属性.
 - 名称空间可以理解为一个容器,这个容器中可以装许多标识符,不同容器中同名的标识符不会冲突.
 
 ### 导入模块
@@ -405,7 +405,7 @@ fp = open(r'c:\io.sys', 'rb') # 以二进制读模式打开
 
   class CCN(object):    #新类
       def __init__( self ):
-          pass 
+          pass
 
   c1 = CC()
   c2 = CCN()
@@ -417,7 +417,7 @@ fp = open(r'c:\io.sys', 'rb') # 以二进制读模式打开
   type(c2)                # 输出-><class '__main__.CCN'>
   ```
 
-- *用类名作名称空间容器**: 
+- *用类名作名称空间容器**:
 
 - ```python
   class MyData(object):
@@ -430,11 +430,11 @@ fp = open(r'c:\io.sys', 'rb') # 以二进制读模式打开
 
   ```python
   class AddrBookEntry(object): # 类定义 'address book entry class'
-  def __init__(self, nm, ph): # 定义构造器 
+  def __init__(self, nm, ph): # 定义构造器
       self.name = nm # 设置 name
       self.phone = ph # 设置 phone
       print 'Created instance for:', self.name
-  def updatePhone(self, newph): # 定义方法 
+  def updatePhone(self, newph): # 定义方法
       self.phone = newph
       print 'Updated phone# for:', self.name
   ```
@@ -477,10 +477,10 @@ fp = open(r'c:\io.sys', 'rb') # 以二进制读模式打开
            print 'calling parent method'
   class Child(Parent): # define child class 定义子类 def childMethod(self):
   print 'calling child method'
-  >>> p = Parent() # instance of parent 父类的实例 
+  >>> p = Parent() # instance of parent 父类的实例
   >>> p.parentMethod()
   calling parent method
-  >>> c = Child()# instance of child 子类的实例 
+  >>> c = Child()# instance of child 子类的实例
   >>> c.childMethod() # child calls its method calling child method
   >>> c.parentMethod() # calls parent's method calling parent method
   ```
@@ -551,7 +551,7 @@ fp = open(r'c:\io.sys', 'rb') # 以二进制读模式打开
 - 管道(|) 匹配多个表达式
 - [] 匹配方括号内任意一个字符
 
-# 第18章 多线程编程	
+  # 第18章 多线程编程
 
 ### threading
 
@@ -757,3 +757,7 @@ t2.join()
 
 # 第21章 数据库编程
 
+# 第22章 Tornado
+
+### Hello Tornado
+- tornado.options来从命令行中读取设置.如果一个与define语句中同名的设置在命令行中被给出, 那么它将成为全局options的一个属性
