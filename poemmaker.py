@@ -1,3 +1,4 @@
+# encoding=utf-8
 import os.path
 
 import tornado.httpserver
@@ -12,7 +13,7 @@ define("port", default=8000, help="run on the given port", type=int)
 class IndexHandler(tornado.web.RequestHandler):
 
     def get(self):
-        self.render('index.html')
+        self.render('index.html')  # 在templates文件夹下找到一个名为index.html的文件
 
 
 class PoemPageHandler(tornado.web.RequestHandler):
@@ -24,7 +25,7 @@ class PoemPageHandler(tornado.web.RequestHandler):
         noun3 = self.get_argument('noun3')
         self.render('poem.html', roads=noun1, wood=noun2,
                     made=verb, difference=noun3)
-
+        # 占位符信息用self.render()方法替换
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
